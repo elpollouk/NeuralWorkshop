@@ -3,11 +3,12 @@
 
 var UpdateLoop = Chicken.fetch("ChickenVis.UpdateLoop");
 var Loader = Chicken.fetch("ChickenVis.Loader");
+var Draw = Chicken.fetch("ChickenVis.Draw");
 
 var updater = new UpdateLoop(onFrame);
 var loader = new Loader();
+var draw;
 
-var drawCtx;
 var sprites = [
     {
         id: "entity",
@@ -16,35 +17,8 @@ var sprites = [
     }
 ];
 
-function rect(x, y, w, h, c) {
-    drawCtx.fillStyle = c;
-    drawCtx.fillRect(x, y, w, h);
-}
-
-function circle(x, y, r, c) {
-    drawCtx.fillStyle = c;
-    drawCtx.beginPath();
-    drawCtx.arc(x, y, r, 0, Math.PI * 2);
-    drawCtx.fill();
-}
-
-function image(id, x, y) {
-    var img = loader.getData(id);
-    drawCtx.drawImage(img, x, y);
-}
-
-var x = 50;
-
-function drawFrame() {
-    drawCtx.clearRect(0, 0, 800, 600);
-    rect(10, 10, 280, 130, "rgb(255, 0, 0)");
-    circle(20, 20, 20, "rgb(0, 255, 0)");
-    image("entity", x++, 50);
-}
-
-
 function init(callback) {
-    drawCtx = viewer.getContext("2d");
+    draw = new Draw(viewer, 800, 600);
     loader.queue(sprites, function () {
         if (loader.numReady + loader.failed.length === loader.numTotal) {
             callback(loader.failed.length === 0);
@@ -54,6 +28,15 @@ function init(callback) {
 
 function onFrame() {
     drawFrame();
+}
+
+var x = 50;
+
+function drawFrame() {
+    draw.clear();
+    draw.rect(10, 10, 280, 130, "rgb(255, 0, 0)");
+    draw.circle(20, 20, 20, "rgb(0, 255, 0)");
+    draw.image(loader.getData("entity"), x++, 50);
 }
 
 window.main = function () {
