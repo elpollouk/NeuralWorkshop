@@ -26,7 +26,7 @@ function init(callback) {
     });
 }
 
-function onFrame() {
+function onFrame(dt) {
     drawFrame();
 }
 
@@ -37,6 +37,8 @@ function drawFrame() {
     draw.rect(10, 10, 280, 130, "rgb(255, 0, 0)");
     draw.circle(20, 20, 20, "rgb(0, 255, 0)");
     draw.image(loader.getData("entity"), x++, 50);
+
+    draw.text(`FPS = ${Math.floor(updater.fps)}`, 0, 0);
 }
 
 window.main = function () {
