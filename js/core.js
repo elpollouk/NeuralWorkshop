@@ -4,7 +4,6 @@ function (Loader, Draw, Math, signalKb) {
     "use strict";
 
     var loader = new Loader();
-    var updater;
     var draw;
 
     var signalUp = signalKb.createSignalProvider("ArrowUp");
@@ -34,7 +33,7 @@ function (Loader, Draw, Math, signalKb) {
 
     var maxExitySpeed = 100;
 
-    function drawFrame() {
+    function drawFrame(fps) {
         draw.clear();
         draw.circle(entity.pos.x, entity.pos.y, 20, "rgb(0, 255, 0)");
         draw.circle(entity.pos.x, entity.pos.y, 20, "black", true);
@@ -48,14 +47,14 @@ function (Loader, Draw, Math, signalKb) {
         draw.context.restore();
         rotation += dRotation;
 
-        var col1 = signalLeft.value ? "rgb(0, 255, 0)" : "rgba(0, 255, 0, 0.5)";
-        draw.rect(315, 10, 50, 50, col1);
-        var col2 = signalUp.value ? "rgb(255, 0, 0)" : "rgba(255, 0, 0, 0.5)";
-        draw.rect(375, 10, 50, 50, col2);
-        var col3 = signalRight.value ? "rgb(0, 255, 0)" : "rgba(0, 255, 0, 0.5)";
-        draw.rect(435, 10, 50, 50, col3);
+        var col = signalLeft.value ? "rgb(0, 255, 0)" : "rgba(0, 255, 0, 0.5)";
+        draw.rect(315, 10, 50, 50, col);
+        col = signalUp.value ? "rgb(255, 0, 0)" : "rgba(255, 0, 0, 0.5)";
+        draw.rect(375, 10, 50, 50, col);
+        col = signalRight.value ? "rgb(0, 255, 0)" : "rgba(0, 255, 0, 0.5)";
+        draw.rect(435, 10, 50, 50, col);
 
-        draw.text(`FPS = ${Math.floor(updater.fps)}`, 0, 0);
+        draw.text(`FPS = ${Math.floor(fps)}`, 0, 0);
     }
 
     function update(dt) {
@@ -69,8 +68,7 @@ function (Loader, Draw, Math, signalKb) {
     }
 
     var Core = {
-        init: function Core_init(upd, onComplete) {
-            updater = upd;
+        init: function Core_init(onComplete) {
             draw = new Draw(viewer, 800, 600);
 
             entity.pos = Math.vector2(Math.randomRange(20, 780), Math.randomRange(20, 580));
@@ -85,10 +83,8 @@ function (Loader, Draw, Math, signalKb) {
             });
         },
 
-        update: function Core_update(dt) {
-            update(dt);
-            drawFrame();
-        }
+        onFrame: drawFrame,
+        onUpdate: update
     };
 
     return Core;
