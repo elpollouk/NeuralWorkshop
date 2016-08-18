@@ -1,30 +1,29 @@
 Chicken.register("Entity", ["ChickenVis.Math"], function (Math) {
 
-    var ROTATION_SPEED = Math.degreesToRads(30);
+    var ROTATION_SPEED = Math.degreesToRads(20);
     var ACCELERATION = 20;
     var DRAG = 0.955;
 
     function rotationToVector(rads, scale) {
-        var v = { x: 0, y: -scale };
+        var v = { x: 0, y: scale };
         Math.rotate2(v, -rads);
         return v;
     }
 
     var arrowPath = [
-        { x: 0, y: -17 },
-        { x: 4, y: -10 },
-        { x: -4, y: -10 },
-        { x: 0, y: -17 }
+        { x: 0, y: 17 },
+        { x: 4, y: 10 },
+        { x: -4, y: 10 },
+        { x: 0, y: 17 }
     ];
 
     var Entity = Chicken.Class(function () {
-        this.rotation = 0;
+        this.rotation = Math.PI;
         this.dRotation = 0;
         this.pos = Math.vector2(400, 300);
         this.velocity = Math.vector2(0, 0);
         this.colour = "rgb(127, 127, 255)";
-        this.signalLeft = null;
-        this.signalRight = null;
+        this.signalSteer = null;
         this.signalGo = null;
     }, {
         render: function (draw) {
@@ -40,21 +39,8 @@ Chicken.register("Entity", ["ChickenVis.Math"], function (Math) {
             draw.restore();
         },
 
-        _signalsToRoationDelta: function () {
-            var l = this.signalLeft.value;
-            var r = this.signalRight.value;
-
-            if (l < r) {
-                return r * ROTATION_SPEED;
-            }
-            else if (r < l) {
-                return l * -ROTATION_SPEED;
-            }
-            return 0;
-        },
-
         update: function (dt) {
-            this.dRotation += dt * this._signalsToRoationDelta();
+            this.dRotation += dt * ROTATION_SPEED * this.signalSteer.value;
             this.dRotation *= DRAG;
             this.rotation += this.dRotation;
 
