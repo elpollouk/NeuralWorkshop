@@ -1,6 +1,6 @@
 Chicken.register("Core",
-["ChickenVis.Loader", "ChickenVis.Draw", "ChickenVis.Math", "Signal.Keyboard", "Signal.Polar", "Signal.Target", "Entity"],
-function (Loader, Draw, Math, signalKb, SignalPolar, SignalTarget, Entity) {
+["ChickenVis.Loader", "ChickenVis.Draw", "ChickenVis.Math", "Signal.Keyboard", "Signal.Polar", "Signal.Target", "Signal.Wrapped", "NeuralNet", "Entity"],
+function (Loader, Draw, Math, signalKb, SignalPolar, SignalTarget, SignalWrapped, NeuralNet, Entity) {
     "use strict";
 
     var loader = new Loader();
@@ -33,11 +33,36 @@ function (Loader, Draw, Math, signalKb, SignalPolar, SignalTarget, Entity) {
 
     var maxExitySpeed = 100;
 
+    var net = new NeuralNet(4, 4, 3);
+    net.randomInit();
+    for (var neuron of net.signals) {
+        neuron.threshold = 0;
+        neuron.minValue = 0;
+        neuron.maxValue = 1;
+    }
+
+    var targeter = new SignalTarget(entity);
     var ent = new Entity();
+    ent.attach(targeter);
+/*
     ent.signalSteer = new SignalPolar(signalLeft, signalRight);
     ent.signalGo = signalUp;
-    ent.attach(new SignalTarget(entity));
+*/
+    var signalPosX = new SignalWrapped(() => ent.pos.x);
+    var signalPosY = new SignalWrapped(() => ent.pos.y);
+    var signalRotation = new SignalWrapped(() => ent.rotation);
 
+    for (var  i = 0; i < 4; i++) {
+        var neuron = net.neurons[i];
+        neuron.addInput(targeter.signals[0]);
+        neuron.addInput(targeter.signals[1]);
+        neuron.addInput(signalPosX);
+        neuron.addInput(signalPosY);
+        neuron.addInput(signalRotation);
+    }
+
+    ent.signalSteer = new SignalPolar(net.signals[0], net.signals[1]);
+    ent.signalGo = net.signals[2];
 
     function drawFrame(fps) {
         draw.clear();
@@ -73,6 +98,7 @@ function (Loader, Draw, Math, signalKb, SignalPolar, SignalTarget, Entity) {
         if (entity.pos.y < 20) entity.velocity.y *= -1;
         else if (entity.pos.y > 580) entity.velocity.y *= -1;
 
+        net.think();
         ent.update(dt);
     }
 
