@@ -1,6 +1,6 @@
 Chicken.register("Core",
-["ChickenVis.Loader", "ChickenVis.Draw", "ChickenVis.Math", "Signal.Keyboard", "Signal.Polar", "Entity"],
-function (Loader, Draw, Math, signalKb, SignalPolar, Entity) {
+["ChickenVis.Loader", "ChickenVis.Draw", "ChickenVis.Math", "Signal.Keyboard", "Signal.Polar", "Signal.Target", "Entity"],
+function (Loader, Draw, Math, signalKb, SignalPolar, SignalTarget, Entity) {
     "use strict";
 
     var loader = new Loader();
@@ -36,10 +36,11 @@ function (Loader, Draw, Math, signalKb, SignalPolar, Entity) {
     var ent = new Entity();
     ent.signalSteer = new SignalPolar(signalLeft, signalRight);
     ent.signalGo = signalUp;
+    ent.attach(new SignalTarget(entity));
+
 
     function drawFrame(fps) {
         draw.clear();
-        draw.line(entity.pos.x, entity.pos.y, ent.pos.x, ent.pos.y, "rgba(0, 0, 0, 0.5)");
         draw.circle(entity.pos.x, entity.pos.y, 20, "rgb(0, 255, 0)");
         draw.circle(entity.pos.x, entity.pos.y, 20, "black", true);
 
