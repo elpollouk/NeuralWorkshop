@@ -3,6 +3,7 @@ Chicken.register("Core",
 function (Loader, Draw, Math, signalKb, SignalPolar, SignalTarget, SignalWrapped, NeuralNet, Entity) {
     "use strict";
 
+    var undefined;
     var loader = new Loader();
     var draw;
 
@@ -36,7 +37,7 @@ function (Loader, Draw, Math, signalKb, SignalPolar, SignalTarget, SignalWrapped
     var net = new NeuralNet(4, 4, 3);
     net.randomInit();
     for (var neuron of net.signals) {
-        neuron.threshold = 0;
+        neuron.threshold = undefined;
         neuron.minValue = 0;
         neuron.maxValue = 1;
     }

@@ -8,10 +8,11 @@ Chicken.register("Neuron", ["ChickenVis.Math"], function (Math) {
         this.threshold = threshold;
         this.inputs = [];
     }, {
-        addInput: function (signal, weight) {
+        addInput: function (signal, index, weight) {
             this.inputs.push({
+                index: index,
                 signal: signal,
-                weight: weight || 1
+                weight: weight || 1,
             });
         },
 
@@ -48,6 +49,23 @@ Chicken.register("Neuron", ["ChickenVis.Math"], function (Math) {
             for (var i of this.inputs) {
                 if (Math.random() <= chance) i.weight += Math.randomRange(-delta, delta);
             }
+        },
+
+        export: function () {
+            var ex = {};
+            if (this.threshold !== undefined) ex.threshold = this.threshold;
+            if (this.minValue !== undefined) ex.minValue = this.minValue;
+            if (this.maxValue !== undefined) ex.maxValue = this.maxValue;
+
+            ex.inputs = [];
+            for (var i of this.inputs) {
+                ex.inputs.push({
+                    index: i.index,
+                    weight: i.weight
+                });
+            }
+
+            return ex;
         }
     });
 

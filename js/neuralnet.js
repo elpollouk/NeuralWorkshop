@@ -1,5 +1,7 @@
 Chicken.register("NeuralNet", ["Neuron"], function (Neuron) {
 
+    var undefined;
+
     function buildNet(layers) {
         var net = [];
         var prevLayerStart = 0;
@@ -9,7 +11,7 @@ Chicken.register("NeuralNet", ["Neuron"], function (Neuron) {
             for (var i = 0; i < count; i++) {
                 var neuron = new Neuron();
                 for (var j = prevLayerStart; j < prevLayerEnd; j++) {
-                    neuron.addInput(net[j]);
+                    neuron.addInput(net[j], j);
                 }
                 net.push(neuron);
             }
@@ -20,11 +22,32 @@ Chicken.register("NeuralNet", ["Neuron"], function (Neuron) {
         return net;
     }
 
+    function importNet(data) {
+        var net = [];
+        for (var neuronData of data.neurons) {
+            var neuron = new Neuron(neuronData.maxValue, neuronData.minValue, neuronData.threshold);
+            for (var inputData of neuronData.inputs) {
+                var input = (inputData.index === undefined) ? null : net[inputData.index];
+                neuron.addInput(input, inputData.index, inputData.weight);
+            }
+        }
+
+        return net;
+    }
+
     var NeuralNet = Chicken.Class(function () {
-        this.neurons = buildNet(arguments);
+        var signalStart;
+        if (typeof arguments[0] == "object") {
+            this.neurons = importNet(arguments[0]);
+            signalStart = this.neurons.length - arguments[0].signals;
+        }
+        else {
+            this.neurons = buildNet(arguments);
+            signalStart = this.neurons.length - arguments[arguments.length-1]
+        }
 
         this.signals = [];
-        for (var i = this.neurons.length - arguments[arguments.length-1]; i < this.neurons.length; i++)
+        for (var i = signalStart; i < this.neurons.length; i++)
             this.signals.push(this.neurons[i]);
     }, {
         randomInit: function () {
@@ -40,6 +63,18 @@ Chicken.register("NeuralNet", ["Neuron"], function (Neuron) {
         mutate: function (chance, delta) {
             for (var n of this.neurons)
                 n.mutate(chance, delta);
+        },
+
+        export: function () {
+            var ex = {
+                siganls: this.signals.length,
+                neurons: []
+            };
+
+            for (var n of this.neurons)
+                ex.neurons.push(n.export());
+
+            return ex;
         }
     });
 
