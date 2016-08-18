@@ -38,13 +38,12 @@ function (Loader, Draw, Math, signalKb) {
         draw.circle(entity.pos.x, entity.pos.y, 20, "rgb(0, 255, 0)");
         draw.circle(entity.pos.x, entity.pos.y, 20, "black", true);
 
-        draw.context.save();
-        draw.context.translate(200, 200);
-//        draw.context.scale(2, 1);
-        draw.context.rotate(rotation);
-        draw.path(circlePath, 'blue');
-        draw.image(loader.getData('entity'), -32, -32);
-        draw.context.restore();
+        draw.save();
+            draw.translate(200, 200);
+            draw.rotate(rotation);
+            draw.path(circlePath, 'blue');
+            draw.image(loader.getData('entity'), -32, -32);
+        draw.restore();
         rotation += dRotation;
 
         var col = signalLeft.value ? "rgb(0, 255, 0)" : "rgba(0, 255, 0, 0.5)";
