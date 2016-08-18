@@ -2,7 +2,7 @@ Chicken.register("Entity", ["ChickenVis.Math"], function (Math) {
 
     var ROTATION_SPEED = Math.degreesToRads(30);
     var ACCELERATION = 20;
-    var DRAG = 0.95;
+    var DRAG = 0.955;
 
     function rotationToVector(rads, scale) {
         var v = { x: 0, y: -scale };
@@ -26,14 +26,11 @@ Chicken.register("Entity", ["ChickenVis.Math"], function (Math) {
         this.signalLeft = null;
         this.signalRight = null;
         this.signalGo = null;
-        this.sensors = Math.vector2(0, 0);
     }, {
         render: function (draw) {
             draw.save();
 
             draw.translate(this.pos.x, this.pos.y);
-            draw.line(0, 0, this.sensors.x - this.pos.x, this.sensors.y - this.pos.y, "rgba(64, 64, 64, 0.5)");
-
             draw.rotate(this.rotation);
 
             draw.circle(0, 0, 20, this.colour);
@@ -47,14 +44,17 @@ Chicken.register("Entity", ["ChickenVis.Math"], function (Math) {
             var l = this.signalLeft.value;
             var r = this.signalRight.value;
 
-            if (l <= r) {
-                return r * -ROTATION_SPEED;
+            if (l < r) {
+                return r * ROTATION_SPEED;
             }
-            return l * ROTATION_SPEED;
+            else if (r < l) {
+                return l * -ROTATION_SPEED;
+            }
+            return 0;
         },
 
         update: function (dt) {
-            this.dRotation -= dt * this._signalsToRoationDelta();
+            this.dRotation += dt * this._signalsToRoationDelta();
             this.dRotation *= DRAG;
             this.rotation += this.dRotation;
 
@@ -62,7 +62,6 @@ Chicken.register("Entity", ["ChickenVis.Math"], function (Math) {
             Math.add2(this.velocity, dV);
             Math.scale2(this.velocity, DRAG);
             Math.add2(this.pos, this.velocity);
-            //if (this.rotation < 0.1) this.rotation = 0;
 
             if (this.pos.x < 20) this.pos.x = 20;
             else if (this.pos.x > 780) this.pos.x = 780;

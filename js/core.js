@@ -40,6 +40,7 @@ function (Loader, Draw, Math, signalKb, Entity) {
 
     function drawFrame(fps) {
         draw.clear();
+        draw.line(entity.pos.x, entity.pos.y, ent.pos.x, ent.pos.y, "rgba(0, 0, 0, 0.5)");
         draw.circle(entity.pos.x, entity.pos.y, 20, "rgb(0, 255, 0)");
         draw.circle(entity.pos.x, entity.pos.y, 20, "black", true);
 
@@ -72,7 +73,6 @@ function (Loader, Draw, Math, signalKb, Entity) {
         if (entity.pos.y < 20) entity.velocity.y *= -1;
         else if (entity.pos.y > 580) entity.velocity.y *= -1;
 
-        ent.sensors = entity.pos;
         ent.update(dt);
     }
 
