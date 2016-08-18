@@ -1,9 +1,11 @@
-Chicken.inject(["ChickenVis.UpdateLoop", "Core"],
-function (UpdateLoop, Core) {
+Chicken.inject(["ChickenVis.UpdateLoop", "ChickenVis.FixedDeltaUpdater", "Core"],
+function (UpdateLoop, FdUpdater, Core) {
     "use strict";
 
+    var fixedUpdater = new FdUpdater(Core.onUpdate, 0.010);
+
     var updater = new UpdateLoop(function (dt) {
-        Core.onUpdate(dt);
+        fixedUpdater.update(dt);
         Core.onFrame(updater.fps);
     });
 
@@ -22,5 +24,4 @@ function (UpdateLoop, Core) {
     window.updateToggle = function () {
         updater.paused = !updater.paused;
     }
-
 });
