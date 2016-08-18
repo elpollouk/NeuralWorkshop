@@ -1,6 +1,6 @@
 Chicken.register("Core",
-["ChickenVis.Loader", "ChickenVis.Draw", "ChickenVis.Math", "Signal.Keyboard"],
-function (Loader, Draw, Math, signalKb) {
+["ChickenVis.Loader", "ChickenVis.Draw", "ChickenVis.Math", "Signal.Keyboard", "Entity"],
+function (Loader, Draw, Math, signalKb, Entity) {
     "use strict";
 
     var loader = new Loader();
@@ -33,10 +33,17 @@ function (Loader, Draw, Math, signalKb) {
 
     var maxExitySpeed = 100;
 
+    var ent = new Entity();
+    ent.signalLeft = signalLeft;
+    ent.signalRight = signalRight;
+    ent.signalGo = signalUp;
+
     function drawFrame(fps) {
         draw.clear();
         draw.circle(entity.pos.x, entity.pos.y, 20, "rgb(0, 255, 0)");
         draw.circle(entity.pos.x, entity.pos.y, 20, "black", true);
+
+        ent.render(draw);
 
         draw.save();
             draw.translate(200, 200);
@@ -64,6 +71,9 @@ function (Loader, Draw, Math, signalKb) {
 
         if (entity.pos.y < 20) entity.velocity.y *= -1;
         else if (entity.pos.y > 580) entity.velocity.y *= -1;
+
+        ent.sensors = entity.pos;
+        ent.update(dt);
     }
 
     var Core = {

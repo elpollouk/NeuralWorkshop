@@ -19,6 +19,7 @@ Chicken.register("Signal.Keyboard", ["window"], function (source) {
         if (provider) {
             provider.set();
             e.stopPropagation();
+            return false;
         }
     };
 
@@ -27,6 +28,7 @@ Chicken.register("Signal.Keyboard", ["window"], function (source) {
         if (provider) {
             provider.clear();
             e.stopPropagation();
+            return false;
         }
     };
 
