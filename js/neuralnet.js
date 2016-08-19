@@ -30,6 +30,7 @@ Chicken.register("NeuralNet", ["Neuron"], function (Neuron) {
                 var input = (inputData.index === undefined) ? null : net[inputData.index];
                 neuron.addInput(input, inputData.index, inputData.weight);
             }
+            net.push(neuron);
         }
 
         return net;
@@ -67,7 +68,7 @@ Chicken.register("NeuralNet", ["Neuron"], function (Neuron) {
 
         export: function () {
             var ex = {
-                siganls: this.signals.length,
+                signals: this.signals.length,
                 neurons: []
             };
 
