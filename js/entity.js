@@ -67,10 +67,10 @@ Chicken.register("Entity", ["ChickenVis.Math"], function (Math) {
             Math.add2(this.pos, this.velocity);
 
             // World bounding
-            //if (this.pos.x < 20) this.pos.x = 20;
-            //else if (this.pos.x > 780) this.pos.x = 780;
-            //if (this.pos.y < 20) this.pos.y = 20;
-            //else if (this.pos.y > 580) this.pos.y = 580;
+            if (this.pos.x < 20) this.pos.x = 20;
+            else if (this.pos.x > 780) this.pos.x = 780;
+            if (this.pos.y < 20) this.pos.y = 20;
+            else if (this.pos.y > 580) this.pos.y = 580;
 
             // Update our attachments
             for (var a of this._attachments) {

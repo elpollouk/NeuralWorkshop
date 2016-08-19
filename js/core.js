@@ -70,11 +70,11 @@ function (Loader, Draw, Math, entityBuilder, FixedDeltaUpdater) {
         entities[5].neuralNet.mutate(0.10, 0.1);
         entities[5].colour = "yellow";
         // Slightly mutated
-        entities[6].neuralNet.mutate(0.05, 0.05);
+        entities[6].neuralNet.mutate(0.02, 0.02);
         entities[6].colour = "rgb(127, 255, 127)";
-        entities[7].neuralNet.mutate(0.05, 0.05);
+        entities[7].neuralNet.mutate(0.02, 0.02);
         entities[7].colour = "rgb(127, 255, 127)";
-        entities[8].neuralNet.mutate(0.05, 0.05);
+        entities[8].neuralNet.mutate(0.02, 0.02);
         entities[8].colour = "rgb(127, 255, 127)";
         // Last entity is unmodified from last generation
 
