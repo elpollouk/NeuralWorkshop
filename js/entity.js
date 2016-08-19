@@ -57,8 +57,8 @@ Chicken.register("Entity", ["ChickenVis.Math"], function (Math) {
             this.dRotation *= DRAG;
             this.rotation += this.dRotation;
             // This is to normalise the value for the AI
-            if (this.rotation < 0) this.rotation += Math.TWO_PI;
-            else if (this.rotation >= Math.TWO_PI) this.rotation -= Math.TWO_PI;
+            //if (this.rotation < 0) this.rotation += Math.TWO_PI;
+            //else if (this.rotation >= Math.TWO_PI) this.rotation -= Math.TWO_PI;
 
             // Position/Velocity
             var dV = rotationToVector(this.rotation, this.signalGo.value * ACCELERATION * dt);
@@ -67,10 +67,10 @@ Chicken.register("Entity", ["ChickenVis.Math"], function (Math) {
             Math.add2(this.pos, this.velocity);
 
             // World bounding
-            if (this.pos.x < 20) this.pos.x = 20;
-            else if (this.pos.x > 780) this.pos.x = 780;
-            if (this.pos.y < 20) this.pos.y = 20;
-            else if (this.pos.y > 580) this.pos.y = 580;
+            //if (this.pos.x < 20) this.pos.x = 20;
+            //else if (this.pos.x > 780) this.pos.x = 780;
+            //if (this.pos.y < 20) this.pos.y = 20;
+            //else if (this.pos.y > 580) this.pos.y = 580;
 
             // Update our attachments
             for (var a of this._attachments) {

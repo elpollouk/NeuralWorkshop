@@ -33,7 +33,7 @@ Chicken.register("Neuron", ["ChickenVis.Math"], function (Math) {
         },
 
         randomInit: function () {
-            var min = this.minValue || 0;
+            var min = this.minValue || -1;
             var max = this.maxValue || 1;
             this.threshold = Math.randomRange(min, max);
 
@@ -43,8 +43,15 @@ Chicken.register("Neuron", ["ChickenVis.Math"], function (Math) {
         },
 
         mutate: function (chance, delta) {
-            if (this.threshold !== undefined && Math.random() <= chance)
-                this.threshold += Math.randomRange(-delta, delta);
+            if (this.threshold !== undefined && Math.random() <= chance) {
+                var t = this.threshold + Math.randomRange(-delta, delta);
+                if (this.minValue !== undefined && t < this.minValue)
+                    t = this.threshold;
+                else if (this.maxValue != undefined && t > this.maxValue)
+                    t = this.threshold;
+
+                this.threshold = t;
+            }
 
             for (var i of this.inputs) {
                 if (Math.random() <= chance) i.weight += Math.randomRange(-delta, delta);

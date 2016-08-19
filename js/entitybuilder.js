@@ -2,8 +2,8 @@ Chicken.register("EntityBuilder",
 ["Signal.Polar", "Signal.Target", "Signal.Wrapped", "NeuralNet", "Entity", "ChickenVis.Math"],
 function (SignalPolar, SignalTarget, SignalWrapped, NeuralNet, Entity, Math) {
 
-    var LAYER1 = 3;
-    var LAYER2 = 3;
+    var LAYER1 = 4;
+    var LAYER2 = 4;
     var LAYER3 = 2;
 
     return function EntityBuilder(target, neuralNetData) {
@@ -24,7 +24,7 @@ function (SignalPolar, SignalTarget, SignalWrapped, NeuralNet, Entity, Math) {
                 var neuron = net.neurons[i];
                 neuron.inputs[0].signal = targeter.signals[0];
                 neuron.inputs[1].signal = targeter.signals[1];
-                neuron.inputs[2].signal = signalRotation;
+                //neuron.inputs[2].signal = signalRotation;
                 //neuron.inputs[2].signal = signalPosX;
                 //neuron.inputs[3].signal = signalPosY;
             }
@@ -37,7 +37,7 @@ function (SignalPolar, SignalTarget, SignalWrapped, NeuralNet, Entity, Math) {
                 var neuron = net.neurons[i];
                 neuron.addInput(targeter.signals[0]);
                 neuron.addInput(targeter.signals[1]);
-                neuron.addInput(signalRotation);
+                //neuron.addInput(signalRotation);
                 //neuron.addInput(signalPosX);
                 //neuron.addInput(signalPosY);
             }
@@ -50,9 +50,14 @@ function (SignalPolar, SignalTarget, SignalWrapped, NeuralNet, Entity, Math) {
             net.signals[1].threshold = undefined;
             net.signals[1].minValue = 0;
             net.signals[1].maxValue = 1;
+
+            //net.signals[2].threshold = undefined;
+            //net.signals[2].minValue = 0;
+            //net.signals[2].maxValue = 1;
         }
 
         ent.signalSteer = net.signals[0];
+        //ent.signalSteer = new SignalPolar(net.signals[0], net.signals[1]);
         ent.signalGo = net.signals[1];
 
         // Punch in the AI
