@@ -1,0 +1,22 @@
+{
+    "title": "Neural Workshop",
+    "version": "0.9.0",
+    "output": "../elpollouk.github.io/NeuralWorkshop/js/index.js",
+    "minify": {
+        "type": "uglifyjs",
+        "options": ["-c", "-m", "--mangle-props", "--mangle-regex=\"/^_/\""]
+    },
+    "input": [
+        { "path": "js/core.js" },
+        { "path": "js/polarsignal.js" },
+        { "path": "js/keyboardsignal.js" },
+        { "path": "js/targetsignal.js" },
+        { "path": "js/wrappedsignal.js" },
+        { "path": "js/entity.js" },
+        { "path": "js/neuron.js" },
+        { "path": "js/neuralnet.js" },
+        { "path": "js/entitybuilder.js" },
+        { "path": "js/graph.js" },
+        { "path": "js/bootstrap.js" }
+    ]
+}

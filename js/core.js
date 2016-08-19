@@ -4,7 +4,7 @@ function (Loader, Draw, Math, entityBuilder, FixedDeltaUpdater, Graph) {
     "use strict";
 
     var loader = new Loader();
-    var graph = new Graph(5, 45, 150);
+    var graph = new Graph(5, 50, 150);
     var draw;
 
     var assets = [
@@ -38,9 +38,11 @@ function (Loader, Draw, Math, entityBuilder, FixedDeltaUpdater, Graph) {
     }
 
     function calcEntityScore(entity) {
-        //var v = Math.subAndClone2(target.pos, entity.pos);
-        //return Math.lengthSqrd2(v);
-        return entity.score;
+        var score = entity.score;
+        if (entity.distanceCovered < 10) {
+            score = Number.MAX_VALUE;
+        }
+        return score;
     }
 
     function nextGeneration() {
@@ -82,26 +84,26 @@ function (Loader, Draw, Math, entityBuilder, FixedDeltaUpdater, Graph) {
 
         // Mutate the generation
         // Very mutated
-        entities[0].neuralNet.mutate(0.3, 0.2);
+        entities[0].neuralNet.mutate(0.8, 0.8);
         entities[0].colour = "red";
-        entities[1].neuralNet.mutate(0.25, 0.2);
+        entities[1].neuralNet.mutate(0.8, 0.8);
         entities[1].colour = "red";
         // Quite mutated
-        entities[2].neuralNet.mutate(0.15, 0.15);
+        entities[2].neuralNet.mutate(0.4, 0.4);
         entities[2].colour = "orange";
-        entities[3].neuralNet.mutate(0.15, 0.15);
+        entities[3].neuralNet.mutate(0.4, 0.4);
         entities[3].colour = "orange";
         // Moderately mutated
-        entities[4].neuralNet.mutate(0.10, 0.1);
+        entities[4].neuralNet.mutate(0.2, 0.2);
         entities[4].colour = "yellow";
-        entities[5].neuralNet.mutate(0.10, 0.1);
+        entities[5].neuralNet.mutate(0.2, 0.2);
         entities[5].colour = "yellow";
         // Slightly mutated
-        entities[6].neuralNet.mutate(0.02, 0.02);
+        entities[6].neuralNet.mutate(0.1, 0.1);
         entities[6].colour = "rgb(127, 255, 127)";
-        entities[7].neuralNet.mutate(0.02, 0.02);
+        entities[7].neuralNet.mutate(0.1, 0.1);
         entities[7].colour = "rgb(127, 255, 127)";
-        entities[8].neuralNet.mutate(0.02, 0.02);
+        entities[8].neuralNet.mutate(0.1, 0.1);
         entities[8].colour = "rgb(127, 255, 127)";
         // Last entity is unmodified from last generation
 
@@ -113,7 +115,7 @@ function (Loader, Draw, Math, entityBuilder, FixedDeltaUpdater, Graph) {
         nextGeneration();
         initTarget();
         generationAge = 0;
-    }, 5);
+    }, 30);
 
     function drawFrame(fps, warpFactor) {
         draw.clear();
@@ -124,10 +126,10 @@ function (Loader, Draw, Math, entityBuilder, FixedDeltaUpdater, Graph) {
             entity.render(draw);
         }
 
-        draw.text(`FPS = ${Math.floor(fps)}`, 0, 0);
-        draw.text(`Generation ${generation}`, 0, 10);
-        draw.text(`Generation Age = ${Math.floor(generationAge)}`, 0, 20);
-        draw.text(`Warp Factor = ${warpFactor}`, 0, 30);
+        draw.text(`FPS = ${Math.floor(fps)}`, 5, 5);
+        draw.text(`Generation ${generation}`, 5, 15);
+        draw.text(`Generation Age = ${Math.floor(generationAge)}`, 5, 25);
+        draw.text(`Warp Factor = ${warpFactor}`, 5, 35);
 
         graph.render(draw, stats);
     }
