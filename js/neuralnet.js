@@ -76,6 +76,15 @@ Chicken.register("NeuralNet", ["Neuron"], function (Neuron) {
                 ex.neurons.push(n.export());
 
             return ex;
+        },
+
+        compare: function (net) {
+            if (net.neurons.length != this.neurons.length) return false;
+            for (var i = 0; i < this.neurons.length; i++) {
+                if (!this.neurons[i].compare(net.neurons[i])) return false;
+            }
+
+            return true;
         }
     });
 

@@ -5,7 +5,7 @@ function (UpdateLoop, FdUpdater, Core) {
     var fixedUpdater = new FdUpdater(Core.onUpdate, 0.010);
 
     var updater = new UpdateLoop(function (dt) {
-        fixedUpdater.update(dt);
+        fixedUpdater.update(dt * Number.parseInt(warp.value));
         Core.onFrame(updater.fps);
     });
 

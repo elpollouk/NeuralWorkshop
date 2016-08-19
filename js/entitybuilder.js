@@ -1,10 +1,16 @@
 Chicken.register("EntityBuilder",
-["Signal.Polar", "Signal.Target", "Signal.Wrapped", "NeuralNet", "Entity"],
-function (SignalPolar, SignalTarget, SignalWrapped, NeuralNet, Entity) {
+["Signal.Polar", "Signal.Target", "Signal.Wrapped", "NeuralNet", "Entity", "ChickenVis.Math"],
+function (SignalPolar, SignalTarget, SignalWrapped, NeuralNet, Entity, Math) {
+
+    var LAYER1 = 4;
+    var LAYER2 = 4;
+    var LAYER3 = 3;
+
     return function EntityBuilder(target, neuralNetData) {
         var targeter = new SignalTarget(target);
         var ent = new Entity();
         ent.attach(targeter);
+        ent.rotation = Math.randomRange(0, Math.TWO_PI);
 
         var signalPosX = new SignalWrapped(() => ent.pos.x);
         var signalPosY = new SignalWrapped(() => ent.pos.y);
@@ -14,7 +20,7 @@ function (SignalPolar, SignalTarget, SignalWrapped, NeuralNet, Entity) {
         if (neuralNetData) {
             // Imported net, just need to link in the signals
             net = new NeuralNet(neuralNetData);
-            for (var  i = 0; i < 4; i++) {
+            for (var  i = 0; i < LAYER1; i++) {
                 var neuron = net.neurons[i];
                 neuron.inputs[0].signal = targeter.signals[0];
                 neuron.inputs[1].signal = targeter.signals[1];
@@ -25,9 +31,9 @@ function (SignalPolar, SignalTarget, SignalWrapped, NeuralNet, Entity) {
         }
         else {
             // Brand new netwrk so we need to attach signals from scratch
-            net = new NeuralNet(4, 4, 3);
+            net = new NeuralNet(LAYER1, LAYER2, LAYER3);
             net.randomInit();
-            for (var  i = 0; i < 4; i++) {
+            for (var  i = 0; i < LAYER1; i++) {
                 var neuron = net.neurons[i];
                 neuron.addInput(targeter.signals[0]);
                 neuron.addInput(targeter.signals[1]);

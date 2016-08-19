@@ -66,6 +66,20 @@ Chicken.register("Neuron", ["ChickenVis.Math"], function (Math) {
             }
 
             return ex;
+        },
+
+        compare: function (neuron) {
+            if (this.threshold != neuron.threshold) return false;
+            if (this.minValue != neuron.minValue) return false;
+            if (this.maxValue != neuron.maxValue) return false;
+
+            if (this.inputs.length != neuron.inputs.length) return false;
+            for (var i = 0; i < this.inputs.length; i++) {
+                if (this.inputs[i].index != neuron.inputs[i].index) return false;
+                if (this.inputs[i].weight != neuron.inputs[i].weight) return false;
+            }
+
+            return true;
         }
     });
 

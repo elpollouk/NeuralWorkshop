@@ -55,7 +55,7 @@ function (Loader, Draw, Math, entityBuilder, FixedDeltaUpdater) {
 
         // Mutate the generation
         // Very mutated
-        entities[0].neuralNet.mutate(0.25, 0.2);
+        entities[0].neuralNet.mutate(0.3, 0.2);
         entities[0].colour = "red";
         entities[1].neuralNet.mutate(0.25, 0.2);
         entities[1].colour = "red";
@@ -77,6 +77,8 @@ function (Loader, Draw, Math, entityBuilder, FixedDeltaUpdater) {
         entities[8].neuralNet.mutate(0.05, 0.05);
         entities[8].colour = "rgb(127, 255, 127)";
         // Last entity is unmodified from last generation
+
+        if (!entities[9].neuralNet.compare(bestEnt.neuralNet)) throw new Error("Nets did not match!");
     }
 
     var generationAge = 0;
