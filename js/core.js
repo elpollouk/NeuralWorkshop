@@ -3,9 +3,13 @@ Chicken.register("Core",
 function (Loader, Draw, Math, entityBuilder, FixedDeltaUpdater, Graph) {
     "use strict";
 
+    var TARGET_SIZE = 20;
+
     var loader = new Loader();
     var graph = new Graph(5, 50, 150);
     var draw;
+
+    var world = {};
 
     var assets = [
         {
@@ -119,8 +123,8 @@ function (Loader, Draw, Math, entityBuilder, FixedDeltaUpdater, Graph) {
 
     function drawFrame(fps, warpFactor) {
         draw.clear();
-        draw.circle(target.pos.x, target.pos.y, 20, "rgb(0, 255, 0)");
-        draw.circle(target.pos.x, target.pos.y, 20, "black", true);
+        draw.circle(target.pos.x, target.pos.y, TARGET_SIZE, "rgb(0, 255, 0)");
+        draw.circle(target.pos.x, target.pos.y, TARGET_SIZE, "black", true);
 
         for (var entity of entities) {
             entity.render(draw);
@@ -137,11 +141,11 @@ function (Loader, Draw, Math, entityBuilder, FixedDeltaUpdater, Graph) {
     function update(dt) {
         Math.scaleAdd2(target.pos, target.velocity, dt);
 
-        if (target.pos.x < 20) target.velocity.x *= -1;
-        else if (target.pos.x > 780) target.velocity.x *= -1;
+        if (target.pos.x < TARGET_SIZE) target.velocity.x *= -1;
+        else if (target.pos.x > world.width - TARGET_SIZE) target.velocity.x *= -1;
 
-        if (target.pos.y < 20) target.velocity.y *= -1;
-        else if (target.pos.y > 580) target.velocity.y *= -1;
+        if (target.pos.y < TARGET_SIZE) target.velocity.y *= -1;
+        else if (target.pos.y > world.height - TARGET_SIZE) target.velocity.y *= -1;
 
         for (var entity of entities) {
             entity.think();
@@ -153,7 +157,7 @@ function (Loader, Draw, Math, entityBuilder, FixedDeltaUpdater, Graph) {
     }
 
     function initTarget() {
-        target.pos = Math.vector2(Math.randomRange(20, 780), Math.randomRange(20, 580));
+        target.pos = Math.vector2(Math.randomRange(TARGET_SIZE, world.width - TARGET_SIZE), Math.randomRange(TARGET_SIZE, world.height - TARGET_SIZE));
         target.velocity = Math.vector2(Math.randomRange(-1, 1), Math.randomRange(-1, 1));
         //target.velocity = Math.vector2(0, 0);
         Math.normalise2(target.velocity);
@@ -163,8 +167,8 @@ function (Loader, Draw, Math, entityBuilder, FixedDeltaUpdater, Graph) {
     var Core = {
         init: function Core_init(onComplete) {
             draw = new Draw(viewer, 800, 600);
+            Core.onResize();
 
-            initTarget();
             constructEntities();
 
             loader.queue(assets, function () {
@@ -172,6 +176,18 @@ function (Loader, Draw, Math, entityBuilder, FixedDeltaUpdater, Graph) {
                     onComplete(loader.failed.length === 0);
                 }
             });
+        },
+
+        onResize: function () {
+            var width = viewer.clientWidth;
+            var height = viewer.clientHeight;
+            console.log(`Resizing world to ${width}x${height}`);
+
+            draw.resize(width, height);
+            world.width = width;
+            world.height = height;
+
+            initTarget();
         },
 
         onFrame: drawFrame,
