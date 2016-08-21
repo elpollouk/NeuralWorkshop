@@ -27,7 +27,9 @@ Chicken.register("Signal.Cluster", ["ChickenVis.Math"], function (Math) {
         },
 
         render: function (draw) {
-            draw.rect(-20, -15, this._normalisedInput * 40, 10, "rgba(0, 0, 255, 0.5)");
+            var segmentWidth = 40 / this.signals.length;
+
+            draw.rect(-20, -20, this._normalisedInput * segmentWidth, 10, "rgba(0, 0, 255, 0.5)");
         }
     });
 
