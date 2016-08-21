@@ -1,6 +1,6 @@
 Chicken.register("EntityBuilder",
-["Signal.Polar", "Signal.Target", "Signal.Wrapped", "NeuralNet", "Entity", "ChickenVis.Math"],
-function (SignalPolar, SignalTarget, SignalWrapped, NeuralNet, Entity, Math) {
+["Signal.Polar", "Signal.Target", "Signal.Cluster", "Signal.Wrapped", "NeuralNet", "Entity", "ChickenVis.Math"],
+function (SignalPolar, SignalTarget, SignalCluster, SignalWrapped, NeuralNet, Entity, Math) {
 
     var LAYER1 = 4;
     var LAYER2 = 3;
@@ -9,11 +9,12 @@ function (SignalPolar, SignalTarget, SignalWrapped, NeuralNet, Entity, Math) {
 
     return function EntityBuilder(world, target, neuralNetData) {
         var targeter = new SignalTarget(target);
+        var rangeCluster = new SignalCluster(targeter.signals[3], 0, 300, 10);
         var ent = new Entity();
         ent.pos.x = world.width / 2;
         ent.pos.y = world.height / 2;
         ent.attach(targeter);
-        //ent.rotation = Math.randomRange(0, Math.TWO_PI);
+        ent.attach(rangeCluster);
 
         var signalPosX = new SignalWrapped(() => ent.pos.x);
         var signalPosY = new SignalWrapped(() => ent.pos.y);
@@ -26,21 +27,27 @@ function (SignalPolar, SignalTarget, SignalWrapped, NeuralNet, Entity, Math) {
             for (var  i = 0; i < LAYER1; i++) {
                 var neuron = net.neurons[i];
                 neuron.inputs[0].signal = SIGNAL_BIAS;
-                neuron.inputs[1].signal = targeter.signals[0];
-                neuron.inputs[2].signal = targeter.signals[1];
-                neuron.inputs[3].signal = targeter.signals[2];
+                neuron.inputs[1].signal = targeter.signals[2];
+                //neuron.inputs[2].signal = targeter.signals[1];
+                //neuron.inputs[3].signal = targeter.signals[2];
+
+                for (var j = 0; j < rangeCluster.signals.length; j++)
+                    neuron.inputs[2 + j].signal = rangeCluster.signals[j];
             }
         }
         else {
             // Brand new netwrk so we need to attach signals from scratch
-            net = new NeuralNet(LAYER1, LAYER2, LAYER3);
+            net = new NeuralNet(LAYER1, LAYER3);
             net.randomInit();
             for (var  i = 0; i < LAYER1; i++) {
                 var neuron = net.neurons[i];
                 neuron.addInput(SIGNAL_BIAS);
-                neuron.addInput(targeter.signals[0]);
-                neuron.addInput(targeter.signals[1]);
                 neuron.addInput(targeter.signals[2]);
+                //neuron.addInput(targeter.signals[1]);
+                //neuron.addInput(targeter.signals[2]);
+
+                for (var j = 0; j < rangeCluster.signals.length; j++)
+                    neuron.addInput(rangeCluster.signals[i]);
             }
 
             // Set output signal limits

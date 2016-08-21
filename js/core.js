@@ -1,6 +1,6 @@
 Chicken.register("Core",
-["ChickenVis.Loader", "ChickenVis.Draw", "ChickenVis.Math", "EntityBuilder", "ChickenVis.FixedDeltaUpdater", "Graph"],
-function (Loader, Draw, Math, entityBuilder, FixedDeltaUpdater, Graph) {
+["ChickenVis.Loader", "ChickenVis.Draw", "ChickenVis.Math", "EntityBuilder", "RenderAttachment", "ChickenVis.FixedDeltaUpdater", "Graph"],
+function (Loader, Draw, Math, entityBuilder, RenderAttachment, FixedDeltaUpdater, Graph) {
     "use strict";
 
     var TARGET_SIZE = 20;
@@ -87,21 +87,19 @@ function (Loader, Draw, Math, entityBuilder, FixedDeltaUpdater, Graph) {
         var netData = bestEnt.neuralNet.export();
 
         // Update the all time best if needed
-        if (bestScore < allTimeBestScore) {
+        if (bestScore < (allTimeBestScore / allTimeBestAge)) {
             allTimeBestScore = bestScore;
             allTimeBestNet = netData;
             allTimeBestAge = 1;
         }
         else {
             allTimeBestAge++;
+            allTimeBestScore += calcEntityScore(entities[entities.length - 1]);
         }
 
         // Build the all time best entity
         var allTimeBest = entities[entities.length - 1] = entityBuilder(world, target, allTimeBestNet);
-        allTimeBest.attach({
-            update: () => {},
-            render: (draw) => draw.circle(0, 0, 5, "gold")
-        });
+        allTimeBest.attach(new RenderAttachment((draw) => draw.circle(0, 0, 5, "gold")));
 
         // Construct the next set of entities
         for (var i = 0; i < entities.length - 1; i++)
