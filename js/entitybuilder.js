@@ -2,13 +2,16 @@ Chicken.register("EntityBuilder",
 ["Signal.Polar", "Signal.Target", "Signal.Wrapped", "NeuralNet", "Entity", "ChickenVis.Math"],
 function (SignalPolar, SignalTarget, SignalWrapped, NeuralNet, Entity, Math) {
 
-    var LAYER1 = 3;
+    var LAYER1 = 4;
     var LAYER2 = 3;
     var LAYER3 = 2;
+    var SIGNAL_BIAS = { value: 0 };
 
-    return function EntityBuilder(target, neuralNetData) {
+    return function EntityBuilder(world, target, neuralNetData) {
         var targeter = new SignalTarget(target);
         var ent = new Entity();
+        ent.pos.x = world.width / 2;
+        ent.pos.y = world.height / 2;
         ent.attach(targeter);
         //ent.rotation = Math.randomRange(0, Math.TWO_PI);
 
@@ -22,12 +25,10 @@ function (SignalPolar, SignalTarget, SignalWrapped, NeuralNet, Entity, Math) {
             net = new NeuralNet(neuralNetData);
             for (var  i = 0; i < LAYER1; i++) {
                 var neuron = net.neurons[i];
-                neuron.inputs[0].signal = targeter.signals[2];
-                //neuron.inputs[1].signal = targeter.signals[3];
-                //neuron.inputs[2].signal = targeter.signals[1];
-                //neuron.inputs[2].signal = signalRotation;
-                //neuron.inputs[2].signal = signalPosX;
-                //neuron.inputs[3].signal = signalPosY;
+                neuron.inputs[0].signal = SIGNAL_BIAS;
+                neuron.inputs[1].signal = targeter.signals[0];
+                neuron.inputs[2].signal = targeter.signals[1];
+                neuron.inputs[3].signal = targeter.signals[2];
             }
         }
         else {
@@ -36,12 +37,10 @@ function (SignalPolar, SignalTarget, SignalWrapped, NeuralNet, Entity, Math) {
             net.randomInit();
             for (var  i = 0; i < LAYER1; i++) {
                 var neuron = net.neurons[i];
+                neuron.addInput(SIGNAL_BIAS);
+                neuron.addInput(targeter.signals[0]);
+                neuron.addInput(targeter.signals[1]);
                 neuron.addInput(targeter.signals[2]);
-                //neuron.addInput(targeter.signals[3]);
-                //neuron.addInput(targeter.signals[1]);
-                //neuron.addInput(signalRotation);
-                //neuron.addInput(signalPosX);
-                //neuron.addInput(signalPosY);
             }
 
             // Set output signal limits
