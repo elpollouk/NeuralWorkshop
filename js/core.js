@@ -43,13 +43,13 @@ function (Loader, Draw, Math, entityBuilder, RenderAttachment, FixedDeltaUpdater
 
     function calcEntityScore(entity) {
         var score = entity.score;
-        if (entity.distanceCovered < 10) {
+        /*if (entity.distanceCovered < 10) {
             score = Number.MAX_VALUE;
-        }
+        }*/
         return score;
     }
 
-    var allTimeBestScore = Number.MAX_VALUE;
+    var allTimeBestScore = 0;
     var allTimeBestNet = null;
     var allTimeBestAge = 1;
 
@@ -64,7 +64,7 @@ function (Loader, Draw, Math, entityBuilder, RenderAttachment, FixedDeltaUpdater
         for (var i = 1; i < entities.length-1; i++) {
             var ent = entities[i];
             var score = calcEntityScore(ent);
-            if (score <= bestScore) {
+            if (score >= bestScore) {
                 bestScore = score;
                 bestEnt = ent;
                 bestIndex = i;
@@ -87,7 +87,7 @@ function (Loader, Draw, Math, entityBuilder, RenderAttachment, FixedDeltaUpdater
         var netData = bestEnt.neuralNet.export();
 
         // Update the all time best if needed
-        if (bestScore < (allTimeBestScore / allTimeBestAge)) {
+        if (bestScore > (allTimeBestScore / allTimeBestAge)) {
             allTimeBestScore = bestScore;
             allTimeBestNet = netData;
             allTimeBestAge = 1;

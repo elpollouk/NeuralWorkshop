@@ -28,8 +28,6 @@ function (SignalPolar, SignalTarget, SignalCluster, SignalWrapped, NeuralNet, En
                 var neuron = net.neurons[i];
                 neuron.inputs[0].signal = SIGNAL_BIAS;
                 neuron.inputs[1].signal = targeter.signals[2];
-                //neuron.inputs[2].signal = targeter.signals[1];
-                //neuron.inputs[3].signal = targeter.signals[2];
 
                 for (var j = 0; j < rangeCluster.signals.length; j++)
                     neuron.inputs[2 + j].signal = rangeCluster.signals[j];
@@ -43,8 +41,6 @@ function (SignalPolar, SignalTarget, SignalCluster, SignalWrapped, NeuralNet, En
                 var neuron = net.neurons[i];
                 neuron.addInput(SIGNAL_BIAS);
                 neuron.addInput(targeter.signals[2]);
-                //neuron.addInput(targeter.signals[1]);
-                //neuron.addInput(targeter.signals[2]);
 
                 for (var j = 0; j < rangeCluster.signals.length; j++)
                     neuron.addInput(rangeCluster.signals[i]);
@@ -67,10 +63,19 @@ function (SignalPolar, SignalTarget, SignalCluster, SignalWrapped, NeuralNet, En
         // Punch in the AI
         ent.think = function Entity_think() {
             net.think();
-            ent.score += targeter.signals[3].value;
+            var distance = targeter.signals[3].value;
+            if (distance <= 20)
+                ent.score += 50;
+            else if (distance < ent._lastDistance)
+                ent.score += 1;
+            else
+                ent.score -= 2;
+
+            ent._lastDistance = distance;
         }
         ent.neuralNet = net;
         ent.score = 0;
+        ent._lastDistance = targeter.signals[3].value;
 
         return ent;
     };

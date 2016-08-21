@@ -16,9 +16,9 @@ Chicken.register("Signal.Cluster", ["ChickenVis.Math"], function (Math) {
             else if (value > this._maxValue) value = this._maxValue;
 
             value /= (this._maxValue - this._minValue);
+            value = Math.round(this.signals.length * value);
             this._normalisedInput = value;
 
-            value = Math.round(this.signals.length * value);
             for (var i = 0; i < value; i++)
                 this.signals[i].value = 1;
 
