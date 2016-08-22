@@ -1,5 +1,5 @@
 Chicken.register("Core",
-["ChickenVis.Loader", "ChickenVis.Draw", "ChickenVis.Math", "EntityBuilder", "ChickenVis.FixedDeltaUpdater", "Graph"],
+["ChickenVis.Loader", "ChickenVis.Draw", "ChickenVis.Math", "EntityBuilder", "ChickenVis.FixedDeltaUpdater", "UI.Graph"],
 function (Loader, Draw, Math, entityBuilder, FixedDeltaUpdater, Graph) {
     "use strict";
 

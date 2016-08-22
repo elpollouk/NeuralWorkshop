@@ -1,4 +1,4 @@
-Chicken.register("Graph", [], function () {
+Chicken.register("UI.Graph", [], function () {
     var Graph = Chicken.Class(function (x, y, w) {
         this.x = x;
         this.y = y;

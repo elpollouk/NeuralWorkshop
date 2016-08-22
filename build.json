@@ -8,17 +8,17 @@
     },
     "input": [
         { "path": "js/core.js" },
-        { "path": "js/polarsignal.js" },
-        { "path": "js/keyboardsignal.js" },
-        { "path": "js/targetsignal.js" },
-        { "path": "js/clustersignal.js" },
-        { "path": "js/wrappedsignal.js" },
-        { "path": "js/bug.js" },
-        { "path": "js/attachments.js" },
+        { "path": "js/signals/polarsignal.js" },
+        { "path": "js/signals/keyboardsignal.js" },
+        { "path": "js/signals/targetsignal.js" },
+        { "path": "js/signals/clustersignal.js" },
+        { "path": "js/signals/wrappedsignal.js" },
+        { "path": "js/entities/bug.js" },
+        { "path": "js/attachments/attachments.js" },
         { "path": "js/neuron.js" },
         { "path": "js/neuralnet.js" },
         { "path": "js/entitybuilder.js" },
-        { "path": "js/graph.js" },
+        { "path": "js/ui/graph.js" },
         { "path": "js/bootstrap.js" }
     ]
 }
