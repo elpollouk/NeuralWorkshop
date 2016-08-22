@@ -11,7 +11,10 @@ function (Loader, Draw, Math, EntityGroup, entityBuilder, FixedDeltaUpdater, Gra
 
     var world = {
         entities: new EntityGroup(),
-        target: {}
+        target: {
+            size: TARGET_SIZE,
+            sizeSqrd: TARGET_SIZE * TARGET_SIZE
+        }
     };
 
     var assets = [

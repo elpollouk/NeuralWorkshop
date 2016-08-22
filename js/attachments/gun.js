@@ -1,5 +1,5 @@
 Chicken.register("Attachment.Gun", ["Entity.Bullet", "ChickenVis.Math"], function (Bullet, Math) {
-	var BULLET_VELOCITY = 500;
+	var BULLET_VELOCITY = 600;
 	var COOLDOWN_TIME = 2.5;
 
 	var Gun = Chicken.Class(function (world, signalActivate) {

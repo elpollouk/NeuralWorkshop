@@ -12,12 +12,13 @@ Chicken.register("Entity.Bullet", ["ChickenVis.Math"], function (Math) {
 			Math.scaleAdd2(this._pos, this._velocity, dt);
 
 			if (this._pos.x < 0 || this._pos.x > this._world.width || this._pos.y < 0 || this._pos.y > this._world.height) {
+				this._owner.score -= 10;
 				this.expire();
 			}
 			else {
 				var d = Math.subAndClone2(this._world.target.pos, this._pos);
 				d = Math.lengthSqrd2(d);
-				if (d < (20 * 20)) {
+				if (d < (this._world.target.sizeSqrd)) {
 					this._owner.score += 1000;
 					this.expire();
 				}
