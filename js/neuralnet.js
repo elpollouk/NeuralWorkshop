@@ -22,12 +22,12 @@ Chicken.register("NeuralNet", ["Neuron"], function (Neuron) {
         return net;
     }
 
-    function importNet(data) {
+    function importNet(data, signalStore) {
         var net = [];
         for (var neuronData of data.neurons) {
             var neuron = new Neuron(neuronData.maxValue, neuronData.minValue, neuronData.threshold);
             for (var inputData of neuronData.inputs) {
-                var input = (inputData.index === undefined) ? null : net[inputData.index];
+                var input = inputData.id ? signalStore[inputData.id] : net[inputData.index];
                 neuron.addInput(input, inputData.index, inputData.weight);
             }
             net.push(neuron);
@@ -39,7 +39,7 @@ Chicken.register("NeuralNet", ["Neuron"], function (Neuron) {
     var NeuralNet = Chicken.Class(function () {
         var signalStart;
         if (typeof arguments[0] == "object") {
-            this.neurons = importNet(arguments[0]);
+            this.neurons = importNet(arguments[0], arguments[1]);
             signalStart = this.neurons.length - arguments[0].signals;
         }
         else {

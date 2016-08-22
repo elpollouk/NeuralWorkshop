@@ -1,5 +1,5 @@
 Chicken.register("Signal.Cluster", ["ChickenVis.Math"], function (Math) {
-    var ClusterSignal = Chicken.Class(function (inputSignal, minValue, maxValue, numOutputSignals) {
+    var ClusterSignal = Chicken.Class(function (idBase, inputSignal, minValue, maxValue, numOutputSignals) {
         this._inputSignal = inputSignal;
         this._minValue = minValue;
         this._maxValue = maxValue;
@@ -8,7 +8,7 @@ Chicken.register("Signal.Cluster", ["ChickenVis.Math"], function (Math) {
         this.signals = [];
 
         for (var i = 0; i < numOutputSignals; i++)
-            this.signals.push({ value: 0 });
+            this.signals.push({ value: 0, id: `${idBase}${i}` });
     }, {
         update: function () {
             var value = this._inputSignal.value;
@@ -30,6 +30,11 @@ Chicken.register("Signal.Cluster", ["ChickenVis.Math"], function (Math) {
             var segmentWidth = 40 / this.signals.length;
 
             draw.rect(-20, -20, this._normalisedInput * segmentWidth, 10, "rgba(0, 0, 255, 0.5)");
+        },
+
+        registerWithStore: function(signalStore) {
+            for (var  i = 0; i < this.signals.length; i++)
+                signalStore[this.signals[i].id] = this.signals[i];
         }
     });
 

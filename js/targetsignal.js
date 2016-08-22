@@ -5,10 +5,10 @@ Chicken.register("Signal.Target", ["ChickenVis.Math"], function (Math) {
     var TargetSignal = Chicken.Class(function (target) {
         this.attachedEntity = null;
         this.targetEntity = target || null;
-        this._vectorX = {value:0};
-        this._vectorY = {value:0};
-        this._rotation = {value:0};
-        this._distance = {value:0};
+        this._vectorX = {value:0, id: "targetX" };
+        this._vectorY = {value:0, id: "targetY" };
+        this._rotation = {value:0, id: "targetDirection" };
+        this._distance = {value:0, id: "targetDistance" };
         this.signals = [this._vectorX, this._vectorY, this._rotation, this._distance];
     }, {
         update: function (dt) {
@@ -26,6 +26,11 @@ Chicken.register("Signal.Target", ["ChickenVis.Math"], function (Math) {
             //draw.rotate(-this._rotation.value);
             //draw.line(0, 0, 0, this._distance.value, "rgba(0, 0, 0, 0.5)");
             //draw.restore();
+        },
+
+        registerWithStore: function (signalStore) {
+            for (var  i = 0; i < this.signals.length; i++)
+                signalStore[this.signals[i].id] = this.signals[i];
         }
     });
 

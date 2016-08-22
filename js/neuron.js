@@ -27,6 +27,7 @@ Chicken.register("Neuron", ["ChickenVis.Math"], function (Math) {
     }, {
         addInput: function (signal, index, weight) {
             this.inputs.push({
+                id: signal.id,
                 index: index,
                 signal: signal,
                 weight: weight || 1,
@@ -82,6 +83,7 @@ Chicken.register("Neuron", ["ChickenVis.Math"], function (Math) {
             ex.inputs = [];
             for (var i of this.inputs) {
                 ex.inputs.push({
+                    id: i.id,
                     index: i.index,
                     weight: i.weight
                 });
