@@ -1,6 +1,6 @@
 Chicken.register("Core",
-["ChickenVis.Loader", "ChickenVis.Draw", "ChickenVis.Math", "EntityBuilder", "RenderAttachment", "ChickenVis.FixedDeltaUpdater", "Graph"],
-function (Loader, Draw, Math, entityBuilder, RenderAttachment, FixedDeltaUpdater, Graph) {
+["ChickenVis.Loader", "ChickenVis.Draw", "ChickenVis.Math", "EntityBuilder", "ChickenVis.FixedDeltaUpdater", "Graph"],
+function (Loader, Draw, Math, entityBuilder, FixedDeltaUpdater, Graph) {
     "use strict";
 
     var TARGET_SIZE = 20;
@@ -30,113 +30,13 @@ function (Loader, Draw, Math, entityBuilder, RenderAttachment, FixedDeltaUpdater
     var entities;
     var target = {};
     var maxTargetSpeed = 100;
-    var generation = 0;
-
-    function constructEntities() {
-        entities = [];
-        for (var i = 0; i < 11; i++)
-            entities.push(entityBuilder(world, target));
-
-        //for (var i = 0; i < 1; i++)
-        //    entities.push(entityBuilder(target, JSON.parse(BEST)));
-    }
-
-    function calcEntityScore(entity) {
-        var score = entity.score;
-        /*if (entity.distanceCovered < 10) {
-            score = Number.MAX_VALUE;
-        }*/
-        return score;
-    }
-
-    var allTimeBestScore = 0;
-    var allTimeBestNet = null;
-    var allTimeBestAge = 1;
-
-    function nextGeneration() {
-        generation++;
-
-        // Find top scoring entity
-        var bestEnt = entities[0];
-        var bestIndex = 0;
-        var bestScore = calcEntityScore(bestEnt);
-
-        for (var i = 1; i < entities.length-1; i++) {
-            var ent = entities[i];
-            var score = calcEntityScore(ent);
-            if (score >= bestScore) {
-                bestScore = score;
-                bestEnt = ent;
-                bestIndex = i;
-            }
-        }
-
-        // Update the states
-        if (bestIndex < 2)
-            stats[4].value++;
-        else if (bestIndex < 4)
-            stats[3].value++;
-        else if (bestIndex < 6)
-            stats[2].value++;
-        else if (bestIndex < 9)
-            stats[1].value++;
-        else
-            stats[0].value++;
-
-        // Export the best neural net
-        var netData = bestEnt.neuralNet.export();
-
-        // Update the all time best if needed
-        if (bestScore > (allTimeBestScore / allTimeBestAge)) {
-            allTimeBestScore = bestScore;
-            allTimeBestNet = netData;
-            allTimeBestAge = 1;
-        }
-        else {
-            allTimeBestAge++;
-            allTimeBestScore += calcEntityScore(entities[entities.length - 1]);
-        }
-
-        // Build the all time best entity
-        var allTimeBest = entities[entities.length - 1] = entityBuilder(world, target, allTimeBestNet);
-        allTimeBest.attach(new RenderAttachment((draw) => draw.circle(0, 0, 5, "gold")));
-
-        // Construct the next set of entities
-        for (var i = 0; i < entities.length - 1; i++)
-            entities[i] = entityBuilder(world, target, netData);
-
-        // Mutate the generation
-        // Very mutated
-        entities[0].neuralNet.mutate(0.4, 0.2);
-        entities[0].colour = "red";
-        entities[1].neuralNet.mutate(0.4, 0.2);
-        entities[1].colour = "red";
-        // Quite mutated
-        entities[2].neuralNet.mutate(0.2, 0.2);
-        entities[2].colour = "orange";
-        entities[3].neuralNet.mutate(0.2, 0.2);
-        entities[3].colour = "orange";
-        // Moderately mutated
-        entities[4].neuralNet.mutate(0.1, 0.2);
-        entities[4].colour = "yellow";
-        entities[5].neuralNet.mutate(0.1, 0.2);
-        entities[5].colour = "yellow";
-        // Slightly mutated
-        entities[6].neuralNet.mutate(0.05, 0.2);
-        entities[6].colour = "rgb(127, 255, 127)";
-        entities[7].neuralNet.mutate(0.05, 0.2);
-        entities[7].colour = "rgb(127, 255, 127)";
-        entities[8].neuralNet.mutate(0.05, 0.2);
-        entities[8].colour = "rgb(127, 255, 127)";
-        // Last entity is unmodified from last generation
-    }
-
     var generationAge = 0;
     var generationPhase = 0;
+
     var generationTimer = new FixedDeltaUpdater(function () {
         initTarget();
         if (++generationPhase == 6) {
-            nextGeneration();
+            entities = entityBuilder.nextGeneration(world, target, stats);
             generationAge = 0;
             generationPhase = 0;
         }
@@ -152,10 +52,10 @@ function (Loader, Draw, Math, entityBuilder, RenderAttachment, FixedDeltaUpdater
         }
 
         draw.text(`FPS = ${Math.floor(fps)}`, 5, 5);
-        draw.text(`Generation ${generation}`, 5, 15);
+        draw.text(`Generation ${entityBuilder.generation}`, 5, 15);
         draw.text(`Generation Age = ${Math.floor(generationAge)}`, 5, 25);
         draw.text(`Warp Factor = ${warpFactor}`, 5, 35);
-        draw.text(`All Time Best Age ${allTimeBestAge}`, 5, 45);
+        draw.text(`All Time Best Age ${entityBuilder.allTimeBestAge}`, 5, 45);
         graph.render(draw, stats);
     }
 
@@ -180,7 +80,6 @@ function (Loader, Draw, Math, entityBuilder, RenderAttachment, FixedDeltaUpdater
     function initTarget() {
         target.pos = Math.vector2(Math.randomRange(TARGET_SIZE, world.width - TARGET_SIZE), Math.randomRange(TARGET_SIZE, world.height - TARGET_SIZE));
         target.velocity = Math.vector2(Math.randomRange(-1, 1), Math.randomRange(-1, 1));
-        //target.velocity = Math.vector2(0, 0);
         Math.normalise2(target.velocity);
         Math.scale2(target.velocity, maxTargetSpeed);
     }
@@ -190,7 +89,7 @@ function (Loader, Draw, Math, entityBuilder, RenderAttachment, FixedDeltaUpdater
             draw = new Draw(viewer, 800, 600);
             Core.onResize();
 
-            constructEntities();
+            entities = entityBuilder.constructEntities(world, target);
 
             loader.queue(assets, function () {
                 if (loader.numReady + loader.failed.length === loader.numTotal) {
