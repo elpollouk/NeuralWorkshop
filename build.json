@@ -13,7 +13,7 @@
         { "path": "js/targetsignal.js" },
         { "path": "js/clustersignal.js" },
         { "path": "js/wrappedsignal.js" },
-        { "path": "js/entity.js" },
+        { "path": "js/bug.js" },
         { "path": "js/attachments.js" },
         { "path": "js/neuron.js" },
         { "path": "js/neuralnet.js" },

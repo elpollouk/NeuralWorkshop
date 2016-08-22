@@ -1,6 +1,6 @@
 Chicken.register("EntityBuilder",
-["Signal.Target", "Signal.Cluster", "Signal.Wrapped", "NeuralNet", "Entity", "RenderAttachment", "ChickenVis.Math"],
-function (SignalTarget, SignalCluster, SignalWrapped, NeuralNet, Entity, RenderAttachment, Math) {
+["Signal.Target", "Signal.Cluster", "Signal.Wrapped", "NeuralNet", "Entity.Bug", "RenderAttachment", "ChickenVis.Math"],
+function (SignalTarget, SignalCluster, SignalWrapped, NeuralNet, Bug, RenderAttachment, Math) {
 
     var LAYER1 = 4;
     var LAYER2 = 3;
@@ -118,7 +118,7 @@ function (SignalTarget, SignalCluster, SignalWrapped, NeuralNet, Entity, RenderA
 	        rangeCluster.registerWithStore(signalStore);
 
 
-	        var ent = new Entity();
+	        var ent = new Bug();
 	        ent.pos.x = world.width / 2;
 	        ent.pos.y = world.height / 2;
 	        ent.attach(targeter);

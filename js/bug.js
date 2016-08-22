@@ -1,4 +1,4 @@
-Chicken.register("Entity", ["ChickenVis.Math"], function (Math) {
+Chicken.register("Entity.Bug", ["ChickenVis.Math"], function (Math) {
 
     var ROTATION_SPEED = Math.degreesToRads(20);
     var ACCELERATION = 20;
@@ -18,7 +18,7 @@ Chicken.register("Entity", ["ChickenVis.Math"], function (Math) {
         { x: 0, y: 17 }
     ];
 
-    var Entity = Chicken.Class(function () {
+    var Bug = Chicken.Class(function () {
         this.rotation = Math.PI;
         this.dRotation = 0;
         this.pos = Math.vector2(0, 0);
@@ -82,5 +82,5 @@ Chicken.register("Entity", ["ChickenVis.Math"], function (Math) {
         }
     });
 
-    return Entity;
+    return Bug;
 });
