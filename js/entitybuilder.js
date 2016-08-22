@@ -67,10 +67,12 @@ function (SignalPolar, SignalTarget, SignalCluster, SignalWrapped, NeuralNet, En
             var distance = targeter.signals[3].value;
             if (distance <= 20)
                 ent.score += 50;
-            else if (distance < ent._lastDistance)
-                ent.score += 1;
-            else
-                ent.score -= 2;
+            if (distance > 300)
+            	ent.score -= 1;
+            else {
+            	distance /= 30;
+            	ent.score += 10 - distance;
+            }
 
             ent._lastDistance = distance;
         }

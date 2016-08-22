@@ -107,26 +107,26 @@ function (Loader, Draw, Math, entityBuilder, RenderAttachment, FixedDeltaUpdater
 
         // Mutate the generation
         // Very mutated
-        entities[0].neuralNet.mutate(0.8, 0.8);
+        entities[0].neuralNet.mutate(0.4, 0.2);
         entities[0].colour = "red";
-        entities[1].neuralNet.mutate(0.8, 0.8);
+        entities[1].neuralNet.mutate(0.4, 0.2);
         entities[1].colour = "red";
         // Quite mutated
-        entities[2].neuralNet.mutate(0.4, 0.4);
+        entities[2].neuralNet.mutate(0.2, 0.2);
         entities[2].colour = "orange";
-        entities[3].neuralNet.mutate(0.4, 0.4);
+        entities[3].neuralNet.mutate(0.2, 0.2);
         entities[3].colour = "orange";
         // Moderately mutated
-        entities[4].neuralNet.mutate(0.2, 0.2);
+        entities[4].neuralNet.mutate(0.1, 0.2);
         entities[4].colour = "yellow";
-        entities[5].neuralNet.mutate(0.2, 0.2);
+        entities[5].neuralNet.mutate(0.1, 0.2);
         entities[5].colour = "yellow";
         // Slightly mutated
-        entities[6].neuralNet.mutate(0.1, 0.1);
+        entities[6].neuralNet.mutate(0.05, 0.2);
         entities[6].colour = "rgb(127, 255, 127)";
-        entities[7].neuralNet.mutate(0.1, 0.1);
+        entities[7].neuralNet.mutate(0.05, 0.2);
         entities[7].colour = "rgb(127, 255, 127)";
-        entities[8].neuralNet.mutate(0.1, 0.1);
+        entities[8].neuralNet.mutate(0.05, 0.2);
         entities[8].colour = "rgb(127, 255, 127)";
         // Last entity is unmodified from last generation
     }
