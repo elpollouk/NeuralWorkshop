@@ -39,15 +39,8 @@ Chicken.register("Neuron", ["ChickenVis.Math"], function (Math) {
                 value += i.signal.value * i.weight;
             }
 
-            /*if (this.maxValue !== undefined && this.maxValue < value)
-                value = this.maxValue;
-            else if (this.threshold !== undefined && value < this.threshold)
-                value = 0;
-            else if (this.minValue !== undefined && value < this.minValue)
-                value = this.minValue;*/
-
-            value = qsigmoid(value);
-            //value = 1 / (1 + Math.exp(-value));
+            //value = qsigmoid(value);
+            value = 1 / (1 + Math.exp(-value * this.threshold));
             value *= this.maxValue - this.minValue;
             value += this.minValue;
 

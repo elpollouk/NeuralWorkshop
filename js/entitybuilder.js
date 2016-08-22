@@ -2,7 +2,7 @@ Chicken.register("EntityBuilder",
 ["Signal.Polar", "Signal.Target", "Signal.Cluster", "Signal.Wrapped", "NeuralNet", "Entity", "ChickenVis.Math"],
 function (SignalPolar, SignalTarget, SignalCluster, SignalWrapped, NeuralNet, Entity, Math) {
 
-    var LAYER1 = 3;
+    var LAYER1 = 4;
     var LAYER2 = 3;
     var LAYER3 = 2;
     var SIGNAL_BIAS = { value: 1 };
@@ -47,11 +47,11 @@ function (SignalPolar, SignalTarget, SignalCluster, SignalWrapped, NeuralNet, En
             net.randomInit();
 
             // Set output signal limits
-            net.signals[0].threshold = undefined;
+            //net.signals[0].threshold = undefined;
             net.signals[0].minValue = -1;
             net.signals[0].maxValue = 1;
 
-            net.signals[1].threshold = undefined;
+            //net.signals[1].threshold = undefined;
             net.signals[1].minValue = 0;
             net.signals[1].maxValue = 1;
         }
