@@ -1,6 +1,6 @@
 Chicken.register("Core",
-["ChickenVis.Loader", "ChickenVis.Draw", "ChickenVis.Math", "EntityBuilder", "ChickenVis.FixedDeltaUpdater", "UI.Graph"],
-function (Loader, Draw, Math, entityBuilder, FixedDeltaUpdater, Graph) {
+["ChickenVis.Loader", "ChickenVis.Draw", "ChickenVis.Math", "Entity.EntityGroup", "EntityBuilder", "ChickenVis.FixedDeltaUpdater", "UI.Graph"],
+function (Loader, Draw, Math, EntityGroup, entityBuilder, FixedDeltaUpdater, Graph) {
     "use strict";
 
     var TARGET_SIZE = 20;
@@ -27,7 +27,7 @@ function (Loader, Draw, Math, entityBuilder, FixedDeltaUpdater, Graph) {
         { value: 0, colour: "rgba(255, 0, 0, 0.75)" }
     ];
 
-    var entities;
+    var entities = new EntityGroup();
     var target = {};
     var maxTargetSpeed = 100;
     var generationAge = 0;
@@ -36,7 +36,8 @@ function (Loader, Draw, Math, entityBuilder, FixedDeltaUpdater, Graph) {
     var generationTimer = new FixedDeltaUpdater(function () {
         initTarget();
         if (++generationPhase == 6) {
-            entities = entityBuilder.nextGeneration(world, target, stats);
+            entities.clear();
+            entities.add(entityBuilder.nextGeneration(world, target, stats));
             generationAge = 0;
             generationPhase = 0;
         }
@@ -47,9 +48,7 @@ function (Loader, Draw, Math, entityBuilder, FixedDeltaUpdater, Graph) {
         draw.circle(target.pos.x, target.pos.y, TARGET_SIZE, "rgb(0, 255, 0)");
         draw.circle(target.pos.x, target.pos.y, TARGET_SIZE, "black", true);
 
-        for (var entity of entities) {
-            entity.render(draw);
-        }
+        entities.render(draw);
 
         draw.text(`FPS = ${Math.floor(fps)}`, 5, 5);
         draw.text(`Generation ${entityBuilder.generation}`, 5, 15);
@@ -68,10 +67,8 @@ function (Loader, Draw, Math, entityBuilder, FixedDeltaUpdater, Graph) {
         if (target.pos.y < TARGET_SIZE) target.velocity.y *= -1;
         else if (target.pos.y > world.height - TARGET_SIZE) target.velocity.y *= -1;
 
-        for (var entity of entities) {
-            entity.think();
-            entity.update(dt);
-        }
+        entities.forEach((entity) => entity.think());
+        entities.update(dt);
 
         generationAge += dt;
         generationTimer.update(dt);
@@ -89,7 +86,7 @@ function (Loader, Draw, Math, entityBuilder, FixedDeltaUpdater, Graph) {
             draw = new Draw(viewer, 800, 600);
             Core.onResize();
 
-            entities = entityBuilder.constructEntities(world, target);
+            entities.add(entityBuilder.constructEntities(world, target));
 
             loader.queue(assets, function () {
                 if (loader.numReady + loader.failed.length === loader.numTotal) {

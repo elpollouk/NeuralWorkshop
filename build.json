@@ -14,6 +14,7 @@
         { "path": "js/signals/clustersignal.js" },
         { "path": "js/signals/wrappedsignal.js" },
         { "path": "js/entities/bug.js" },
+        { "path": "js/entities/entitygroup.js" },
         { "path": "js/attachments/attachments.js" },
         { "path": "js/neuron.js" },
         { "path": "js/neuralnet.js" },
