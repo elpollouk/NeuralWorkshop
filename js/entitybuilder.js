@@ -1,10 +1,10 @@
 Chicken.register("EntityBuilder",
-["Signal.Target", "Signal.Cluster", "Signal.Wrapped", "NeuralNet", "Entity.Bug", "RenderAttachment", "ChickenVis.Math"],
-function (SignalTarget, SignalCluster, SignalWrapped, NeuralNet, Bug, RenderAttachment, Math) {
+["Signal.Target", "Signal.Cluster", "Signal.Wrapped", "NeuralNet", "Entity.Bug", "RenderAttachment", "Attachment.Gun", "ChickenVis.Math"],
+function (SignalTarget, SignalCluster, SignalWrapped, NeuralNet, Bug, RenderAttachment, Gun, Math) {
 
     var LAYER1 = 4;
     var LAYER2 = 3;
-    var LAYER3 = 2;
+    var LAYER3 = 3;
     var SIGNAL_BIAS = { value: 1, id: "bias" };
 
     var entities;
@@ -121,9 +121,9 @@ function (SignalTarget, SignalCluster, SignalWrapped, NeuralNet, Bug, RenderAtta
 	        var ent = new Bug();
 	        ent.pos.x = world.width / 2;
 	        ent.pos.y = world.height / 2;
+
 	        ent.attach(targeter);
 	        ent.attach(rangeCluster);
-
 
 	        var net;
 	        if (neuralNetData) {
@@ -151,10 +151,16 @@ function (SignalTarget, SignalCluster, SignalWrapped, NeuralNet, Bug, RenderAtta
 	            //net.signals[1].threshold = undefined;
 	            net.signals[1].minValue = 0;
 	            net.signals[1].maxValue = 1;
+
+	            //net.signals[2].threshold = undefined;
 	        }
 
 	        ent.signalSteer = net.signals[0];
 	        ent.signalGo = net.signals[1];
+
+   	        var gun = new Gun(world, net.signals[2]);
+	        ent.attach(gun);
+
 
 	        // Punch in the AI
 	        ent.think = function Entity_think() {
